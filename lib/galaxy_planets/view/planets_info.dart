@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:animator_pr6/galaxy_planets/controller/planets_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,9 +12,22 @@ class PlanetsInfoScreen extends StatefulWidget {
   State<PlanetsInfoScreen> createState() => _PlanetsInfoScreenState();
 }
 
-class _PlanetsInfoScreenState extends State<PlanetsInfoScreen> {
+class _PlanetsInfoScreenState extends State<PlanetsInfoScreen> with SingleTickerProviderStateMixin{
 
   PlanetsController controller = Get.put(PlanetsController());
+
+  AnimationController? animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 10));
+    animationController!.repeat();
+    animationController!.addListener(() {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,36 +46,47 @@ class _PlanetsInfoScreenState extends State<PlanetsInfoScreen> {
                 Stack(
                   alignment: Alignment(0,-6),
                   children: [
-                    Container(
-                      height: 30.h,
-                      width: 100.w,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.lightBlue,
-                      ),
-                      child: Column(
-                        children: [
-                          SizedBox(height: 13.h,),
-                          Text("${controller.planetsList[index].name}",style: TextStyle(fontSize: 28,color: Colors.white,fontWeight: FontWeight.bold),),
-                          Text("Milkyway Galaxy",style: TextStyle(fontSize: 18,color: Colors.white60),),
-                          SizedBox(height: 3.h,),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 70),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Icon(Icons.location_on_outlined,color: Colors.black,size: 25,),
-                                Text("${controller.planetsList[index].sunDistance}",style: TextStyle(fontSize: 18,color: Colors.white),),
-                                Spacer(),
-                                Icon(Icons.sync_alt,size: 25,color: Colors.black,),
-                                Text("${controller.planetsList[index].gravity}",style: TextStyle(fontSize: 18,color: Colors.white),),
-                              ],
+                    InkWell(
+                      onTap: () {
+
+                      },
+                      child: Container(
+                        height: 30.h,
+                        width: 100.w,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.lightBlue,
+                        ),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 13.h,),
+                            Text("${controller.planetsList[index].name}",style: TextStyle(fontSize: 28,color: Colors.white,fontWeight: FontWeight.bold),),
+                            Text("Milkyway Galaxy",style: TextStyle(fontSize: 18,color: Colors.white60),),
+                            SizedBox(height: 3.h,),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 70),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Icons.location_on_outlined,color: Colors.black,size: 25,),
+                                  Text("    ${controller.planetsList[index].sunDistance}",style: TextStyle(fontSize: 18,color: Colors.white),),
+                                  Spacer(),
+                                  Icon(Icons.sync_alt,size: 25,color: Colors.black,),
+                                  Text("    ${controller.planetsList[index].gravity}",style: TextStyle(fontSize: 18,color: Colors.white),),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                    Image.asset("${controller.planetsList[index].img}",height: 25.h,width: 70.w,)
+                    AnimatedBuilder(builder: (context, child) {
+                      return Transform.rotate(
+                        angle: animationController!.value * 2 * pi,
+                        child: child,
+                      );
+                    },animation: animationController!,
+                    child: Image.asset("${controller.planetsList[index].img}",height: 25.h,width: 70.w,))
                   ],
                 ),
                 SizedBox(height: 3.h,),

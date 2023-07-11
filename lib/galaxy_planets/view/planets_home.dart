@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:animator_pr6/galaxy_planets/controller/planets_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,10 +13,21 @@ class PlanetsHome extends StatefulWidget {
   State<PlanetsHome> createState() => _PlanetsHomeState();
 }
 
-class _PlanetsHomeState extends State<PlanetsHome> {
-
+class _PlanetsHomeState extends State<PlanetsHome>
+    with SingleTickerProviderStateMixin {
   PlanetsController controller = Get.put(PlanetsController());
+  AnimationController? animationController;
 
+  @override
+  void initState() {
+    super.initState();
+    animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 10));
+    animationController!.repeat();
+    animationController!.addListener(() {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +62,15 @@ class _PlanetsHomeState extends State<PlanetsHome> {
           ],
         ),
         backgroundColor: Color(0xff2D383A),
-        body: ListView.builder(itemBuilder: (context, index) {
-          return InkWell(onTap: () {
-            Get.toNamed("p_info",arguments: index);
-          },child: planets(index));
-        },itemCount: controller.planetsList.length),
+        body: ListView.builder(
+            itemBuilder: (context, index) {
+              return InkWell(
+                  onTap: () {
+                    Get.toNamed("p_info", arguments: index);
+                  },
+                  child: planets(index));
+            },
+            itemCount: controller.planetsList.length),
       ),
     );
   }
@@ -76,39 +93,86 @@ class _PlanetsHomeState extends State<PlanetsHome> {
                   color: Colors.lightBlue,
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 90,top: 20,bottom: 40,right: 10),
+                  padding: const EdgeInsets.only(
+                      left: 90, top: 20, bottom: 40, right: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("${controller.planetsList[index].name}",style: TextStyle(fontSize: 27,fontWeight: FontWeight.bold,color: Colors.white),),
-                          Icon(Icons.more_vert_rounded,size: 25,color: Colors.white,),
+                          Text(
+                            "${controller.planetsList[index].name}",
+                            style: TextStyle(
+                                fontSize: 27,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                          Icon(
+                            Icons.more_vert_rounded,
+                            size: 25,
+                            color: Colors.white,
+                          ),
                         ],
                       ),
-                      Text("Milkyway Galaxy",style: TextStyle(fontSize: 18,color: Colors.white60),),
-                      SizedBox(height: 6,),
-                      Container(width: 10.w,height: 2,color: Colors.deepPurple,),
+                      Text(
+                        "Milkyway Galaxy",
+                        style: TextStyle(fontSize: 18, color: Colors.white60),
+                      ),
+                      SizedBox(
+                        height: 6,
+                      ),
+                      Container(
+                        width: 10.w,
+                        height: 2,
+                        color: Colors.deepPurple,
+                      ),
                       Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 30),
-                        child: Row(
-                          children: [
-                            Icon(Icons.location_on_outlined,color: Colors.black,size: 25,),
-                            Text("${controller.planetsList[index].sunDistance}",style: TextStyle(fontSize: 18,color: Colors.white),),
-                            Spacer(),
-                            Icon(Icons.sync_alt,size: 25,color: Colors.black,),
-                            Text("${controller.planetsList[index].gravity}",style: TextStyle(fontSize: 18,color: Colors.white),),
-                          ],
-                        ),
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.location_on_outlined,
+                            color: Colors.black,
+                            size: 25,
+                          ),
+                          Text(
+                            "    ${controller.planetsList[index].sunDistance}",
+                            style:
+                                TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                          Icon(
+                            Icons.sync_alt,
+                            size: 25,
+                            color: Colors.black,
+                          ),
+                          Text(
+                            "    ${controller.planetsList[index].gravity}",
+                            style:
+                                TextStyle(fontSize: 18, color: Colors.white),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
               ),
             ),
-            Align(alignment: Alignment(-1.5,0),child: Image.asset("${controller.planetsList[index].img}",height: 20.h,width: 60.w,)),
+            Align(
+                alignment: Alignment(-1.2, 0),
+                child: AnimatedBuilder(
+                      builder: (context, child) {
+                        return Transform.rotate(
+                          angle: animationController!.value * 2 * pi,
+                          child: child,
+                        );
+                      },
+                      animation: animationController!,
+                  child: Image.asset(
+                    "${controller.planetsList[index].img}",
+                    height: 18.h,
+                    width: 55.w,
+                  ),
+                )),
           ],
         ),
       ),

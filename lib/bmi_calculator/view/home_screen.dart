@@ -11,8 +11,27 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateMixin{
   BmiController controller = Get.put(BmiController());
+
+  AnimationController? animationController;
+  Animation? genderanimation;
+  Animation? ageanimation;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController =
+        AnimationController(vsync: this, duration: Duration(seconds: 3),);
+    genderanimation = Tween<Alignment>(begin: Alignment(-40,0), end: Alignment(0,0))
+        .animate(animationController!);
+    ageanimation = Tween<Alignment>(begin: Alignment(40,0), end: Alignment(0,0))
+        .animate(animationController!);
+    animationController!.forward();
+    animationController!.addListener(() {setState(() {
+
+    });});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,92 +67,109 @@ class _HomeScreenState extends State<HomeScreen> {
               () => Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      controller.changeColorMale();
-                    },
-                    child: controller.male == false
-                        ? gender(
-                            Icon(
-                              Icons.male,
-                              size: 90,
-                              color: Colors.white,
-                            ),
-                            "MALE")
-                        : gender1(
-                            Icon(
-                              Icons.male,
-                              size: 90,
-                              color: Colors.pink,
-                            ),
-                            "MALE"),
+                  Expanded(
+                    child: Container(
+                      child: Align(
+                        alignment: genderanimation!.value,
+                        child: GestureDetector(
+                          onTap: () {
+                            controller.changeColorMale();
+                          },
+                          child: controller.male == false
+                              ? gender(
+                                  Icon(
+                                    Icons.male,
+                                    size: 90,
+                                    color: Colors.white,
+                                  ),
+                                  "MALE")
+                              : gender1(
+                                  Icon(
+                                    Icons.male,
+                                    size: 90,
+                                    color: Colors.pink,
+                                  ),
+                                  "MALE"),
+                        ),
+                      ),
+                    ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      controller.changeColorFemale();
-                    },
-                    child: controller.female == false
-                        ? gender(
-                            Icon(
-                              Icons.female,
-                              size: 90,
-                              color: Colors.white,
-                            ),
-                            "FEMALE")
-                        : gender1(
-                            Icon(
-                              Icons.female,
-                              size: 90,
-                              color: Colors.pink,
-                            ),
-                            "FEMALE"),
+                  Expanded(
+                    child: Container(
+                      child: Align(
+                        alignment: ageanimation!.value,
+                        child: GestureDetector(
+                          onTap: () {
+                            controller.changeColorFemale();
+                          },
+                          child: controller.female == false
+                              ? gender(
+                                  Icon(
+                                    Icons.female,
+                                    size: 90,
+                                    color: Colors.white,
+                                  ),
+                                  "FEMALE")
+                              : gender1(
+                                  Icon(
+                                    Icons.female,
+                                    size: 90,
+                                    color: Colors.pink,
+                                  ),
+                                  "FEMALE"),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
             Obx(
-              () => Container(
-                height: 23.h,
-                width: 90.w,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white38,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      "HEIGHT",
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "${controller.slider.toInt()}",
-                          style: TextStyle(
-                              fontSize: 50,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          "cm",
-                          style: TextStyle(fontSize: 20, color: Colors.white),
-                        ),
-                      ],
-                    ),
-                    Slider(
-                      value: controller.slider.value,
-                      max: 300,
-                      min: 50,
-                      activeColor: Colors.pink.shade200,
-                      inactiveColor: Colors.white38,
-                      thumbColor: Colors.pinkAccent,
-                      onChanged: (value) {
-                        controller.changeSlider(value);
-                      },
-                    )
-                  ],
+              () => Align(
+                alignment: ageanimation!.value,
+                child: Container(
+                  height: 23.h,
+                  width: 90.w,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white38,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Text(
+                        "HEIGHT",
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${controller.slider.toInt()}",
+                            style: TextStyle(
+                                fontSize: 50,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            "cm",
+                            style: TextStyle(fontSize: 20, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      Slider(
+                        value: controller.slider.value,
+                        max: 300,
+                        min: 50,
+                        activeColor: Colors.pink.shade200,
+                        inactiveColor: Colors.white38,
+                        thumbColor: Colors.pinkAccent,
+                        onChanged: (value) {
+                          controller.changeSlider(value);
+                        },
+                      )
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -141,92 +177,106 @@ class _HomeScreenState extends State<HomeScreen> {
               () => Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Container(
-                    height: 23.h,
-                    width: 43.w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white38,
-                    ),
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          "WEIGHT",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
+                  Expanded(
+                    child: Container(
+                      child: Align(
+                        alignment: genderanimation!.value,
+                        child: Container(
+                          height: 23.h,
+                          width: 43.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white38,
+                          ),
+                          alignment: Alignment.center,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                "WEIGHT",
+                                style: TextStyle(fontSize: 18, color: Colors.white),
+                              ),
+                              Text(
+                                "${controller.weight}",
+                                style: TextStyle(
+                                    fontSize: 35,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  FloatingActionButton(
+                                    onPressed: () {
+                                      controller.weightIncrease();
+                                    },
+                                    child: Icon(Icons.add),
+                                    backgroundColor: Colors.black12,
+                                  ),
+                                  FloatingActionButton(
+                                    onPressed: () {
+                                      controller.weightDeIncrease();
+                                    },
+                                    child: Icon(Icons.remove),
+                                    backgroundColor: Colors.black12,
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
-                        Text(
-                          "${controller.weight}",
-                          style: TextStyle(
-                              fontSize: 35,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            FloatingActionButton(
-                              onPressed: () {
-                                controller.weightIncrease();
-                              },
-                              child: Icon(Icons.add),
-                              backgroundColor: Colors.black12,
-                            ),
-                            FloatingActionButton(
-                              onPressed: () {
-                                controller.weightDeIncrease();
-                              },
-                              child: Icon(Icons.remove),
-                              backgroundColor: Colors.black12,
-                            ),
-                          ],
-                        )
-                      ],
+                      ),
                     ),
                   ),
-                  Container(
-                    height: 23.h,
-                    width: 43.w,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: Colors.white38,
-                    ),
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          "AGE",
-                          style: TextStyle(fontSize: 18, color: Colors.white),
+                  Expanded(
+                    child: Container(
+                      child: Align(
+                        alignment: ageanimation!.value,
+                        child: Container(
+                          height: 23.h,
+                          width: 43.w,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white38,
+                          ),
+                          alignment: Alignment.center,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text(
+                                "AGE",
+                                style: TextStyle(fontSize: 18, color: Colors.white),
+                              ),
+                              Text(
+                                "${controller.age}",
+                                style: TextStyle(
+                                    fontSize: 35,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  FloatingActionButton(
+                                    onPressed: () {
+                                      controller.ageIncrease();
+                                    },
+                                    child: Icon(Icons.add),
+                                    backgroundColor: Colors.black12,
+                                  ),
+                                  FloatingActionButton(
+                                    onPressed: () {
+                                      controller.ageDeIncrease();
+                                    },
+                                    child: Icon(Icons.remove),
+                                    backgroundColor: Colors.black12,
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
                         ),
-                        Text(
-                          "${controller.age}",
-                          style: TextStyle(
-                              fontSize: 35,
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            FloatingActionButton(
-                              onPressed: () {
-                                controller.ageIncrease();
-                              },
-                              child: Icon(Icons.add),
-                              backgroundColor: Colors.black12,
-                            ),
-                            FloatingActionButton(
-                              onPressed: () {
-                                controller.ageDeIncrease();
-                              },
-                              child: Icon(Icons.remove),
-                              backgroundColor: Colors.black12,
-                            ),
-                          ],
-                        )
-                      ],
+                      ),
                     ),
                   )
                 ],
