@@ -25,6 +25,12 @@ samples, guidance on mobile development, and a full API reference.
 
 # BMI Calculator
 
+
+
+https://github.com/darshansankhat/animator_pr6/assets/119835050/3f73dd4b-943a-46aa-a62f-f0e91e052e4a
+
+
+
 <p>
 
 <img src="https://github.com/darshansankhat/animator_pr6/assets/119835050/b4687538-7d1e-408d-8f43-7a18fcdb8c87" height="60%" width="30%">
